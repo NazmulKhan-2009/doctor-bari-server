@@ -1,3 +1,6 @@
+console.clear()
+
+
 const express=require('express')
 const bodyParser=require('body-parser');
 const cors=require('cors');
@@ -11,7 +14,7 @@ const app = express();
 // Middleware Config
 app.use(cors());
 app.use(bodyParser.json());
-app.use(express.static('doctors'));
+app.use(express.static('doctors')); //directory send for photo upload
 app.use(fileUpload());
 
 
@@ -27,6 +30,7 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 
 client.connect(err => {
   const appointmentCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_APPOINTMENT_COLLECTION}`);
+
   const doctorCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_DOCTOR_COLLECTION}`);
   // const doctorCollection = client.db(`doctorBari`).collection(`docInfo`);
 
@@ -67,13 +71,71 @@ client.connect(err => {
  app.get('/doctorlist',(req,res)=>{
   doctorCollection.find({}).toArray((err,result)=>{res.send(result)})
  })
+
+// appointment by date
+// app.post('/appointmentbydate', (req, res) => {
+//   const date = req.body.date;
+//   const email = req.body.email;
+//   doctorCollection.find({ email: email })
+//       .toArray((err, doctors) => {
+//           const filter = { appointmentDate:date }
+//           if (doctors.length === 0) {
+//               filter.email = email;
+//           }
+//           appointmentCollection.find(filter)
+//               .toArray((err, documents) => {
+//                   // console.log(email, date, doctors, documents)
+//                   console.log(documents)
+//                   res.send(documents);
+//               })
+//       })
+// })
+
+
+app.post('/appointmentbydate',async(req,res)=>{
+const info={
+  email:req.body.email,
+  appointmentDate:req.body.date
+}
+
+try{
+  await doctorCollection.find({email:req.body.email}).toArray((err,doctors)=>{
+    // if(doctors.length>0){
+    //   appointmentCollection.find({appointmentDate:req.body.date}).toArray((err,docs)=>{console.log(docs)})
+    // }else{
+    //   appointmentCollection.find(info).toArray((err,appoint)=>{console.log(appoint)})
+    //   // console.log("no doctor in the list")
+    // }
+
+    (async()=>{
+      doctors.length>0 ? 
+      await appointmentCollection.find({appointmentDate:req.body.date}).toArray((err,docs)=>{res.send(docs)})      
+      :
+      await appointmentCollection.find(info).toArray((err,appoint)=>{res.send(appoint)})
+
+    })()
+
+  })
+
+
+ }catch(e){
+   res.status().send(e)
+  } ;
+
+
+})
+
+// app.post('/isdoctor' , async(req , res)=>{
+//   await doctorCollection.find({email:req.body.email}).toArray((err,docotorList)=>{
+//     console.log(docotorList.length>0)
+//     res.send(docotorList.length>0)
+//   })
+// })
+
+
 });
 
-//appointment by date
 
-app.post('/appointmentbydate' , (req , res)=>{
-  console.log(req.body)
-})
 
 
 
@@ -81,4 +143,4 @@ app.get('/',(req,res)=>{
  res.send("the server is working")
 })
 
-app.listen(port,()=>{console.log("server ready")})
+app.listen(port,()=>{console.log(`server ready in PORT ${port}`)})
