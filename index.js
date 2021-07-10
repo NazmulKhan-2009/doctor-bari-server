@@ -47,6 +47,14 @@ client.connect(err => {
   appointmentCollection.find({}).toArray((err,result)=>{res.send(result)})
  }) 
 
+ //PATCH SEEN
+//  app.put("/addAppointment/:id", (req,res)=>{
+//   appointmentCollection.findByIdAndUpdate({_id:req.params.id},req.body)
+//   .then(res=>console.log(res))
+  
+  
+//  })
+
  app.post('/addadoctor',(req,res)=>{
    const file=req.files.file;
    const name=req.body.name;
@@ -125,12 +133,12 @@ try{
 
 })
 
-// app.post('/isdoctor' , async(req , res)=>{
-//   await doctorCollection.find({email:req.body.email}).toArray((err,docotorList)=>{
-//     console.log(docotorList.length>0)
-//     res.send(docotorList.length>0)
-//   })
-// })
+app.post('/isdoctor' , async(req , res)=>{
+  await doctorCollection.find({email:req.body.email}).toArray((err,docotorList)=>{
+    console.log(docotorList.length>0)
+    res.send(docotorList.length>0)
+  })
+})
 
 
 });
