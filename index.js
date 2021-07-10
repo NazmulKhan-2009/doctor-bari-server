@@ -28,6 +28,8 @@ const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster
 
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
+console.log(client ? 'Data Base Connected' : "Sorry DB Not connected")
+
 client.connect(err => {
   const appointmentCollection = client.db(`${process.env.DB_NAME}`).collection(`${process.env.DB_APPOINTMENT_COLLECTION}`);
 
@@ -59,22 +61,40 @@ client.connect(err => {
    const file=req.files.file;
    const name=req.body.name;
    const email=req.body.email;
+  //  const filePath=`${__dirname}/doctors/${file.name}`
 
-   console.log(file, name , email)
+  //  console.log(file, name , email)
+  //  console.log(file.data)
 
-   file.mv(`${__dirname}/doctors/${file.name}`,err=>{
-     if(err){
-      console.log(err)
-      return res.status(500).send({msg:"Falied to upload"})
-     }
+  console.log(typeof(file.size))
+  console.log(typeof(parseInt(file.size)))
+  //  file.mv(filePath,err=>{
+  //    if(err){
+  //     console.log(err)
+  //     return res.status(500).send({msg:"Falied to upload"})
+  //    }
+//not part of code just keep for later
+  // const newImg=fs.readFileSync(filePath)
+  const newImg=file.data
+  const encImg=newImg.toString('base64')
 
-     doctorCollection.insertOne({img:file.name,name:name,email:email})
+  // Buffer depricated so use Buffer.alloc(), Buffer.allocUnsafe(), or Buffer.from() 
+
+  var image={
+    contentType:file.mimetype,
+    size:file.size,
+    // size:parseInt(file.size),
+    // img:Buffer(encImg,'base64')
+    img: Buffer.from(encImg,'base64')
+  }
+
+     doctorCollection.insertOne({img:image,name:name,email:email})
      .then(result=>{
        res.send(result.insertedCount>0);
      })
    })
 
- })
+//  })
 
  app.get('/doctorlist',(req,res)=>{
   doctorCollection.find({}).toArray((err,result)=>{res.send(result)})
