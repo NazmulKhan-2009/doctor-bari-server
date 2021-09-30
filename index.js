@@ -168,7 +168,7 @@ app.post('/isdoctor' , async(req , res)=>{
 
 
 app.get('/',(req,res)=>{
- res.send("the server is working")
+ res.send("the doctor bari server is working for testing hospital api")
 })
 
 app.listen(port,()=>{console.log(`server ready in PORT ${port}`)})
