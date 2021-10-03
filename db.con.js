@@ -3,13 +3,13 @@ require('dotenv').config()
 const mongoose=require('mongoose')
 
 //!from doctor bari api
-// const db = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qnbwm.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const db = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qnbwm.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
 
 
 //! from hospital api
 
 
-const localDB="mongodb://localhost:27017/hospital?retryWrites=true&w=majority"
+// const localDB="mongodb://localhost:27017/hospital?retryWrites=true&w=majority"
 
 module.exports = async function connection() {
  try {
@@ -18,7 +18,7 @@ module.exports = async function connection() {
          
          useUnifiedTopology: true,
      };
-     await mongoose.connect(localDB, connectionParams);
+     await mongoose.connect(db, connectionParams);
      console.log("connected to database");
  } catch (error) {
      console.log(error);
