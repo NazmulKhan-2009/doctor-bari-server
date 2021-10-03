@@ -9,6 +9,7 @@ const port=process.env.PORT || 8000;
 
 const hospitalRoute=require('./src/router/hospitalData');
 const doctorRoute=require('./src/router/doctorRouter')
+const apointmentRoute =require('./src/router/appointmentRouter')
 
 connection()
 
@@ -19,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use('/hospital',hospitalRoute);
 app.use('/doctor',doctorRoute);
-
+app.use('/appointment',apointmentRoute)
 
 
 
