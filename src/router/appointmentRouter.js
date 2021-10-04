@@ -1,6 +1,6 @@
 const express=require('express')
 const router=express.Router()
-const {appointmentSet,getAppointmentList} =require('../controller/appointmentControl/appointmentControl');
+const {appointmentSet,getAppointmentList,updateAppointment} =require('../controller/appointmentControl/appointmentControl');
 
 
 
@@ -12,6 +12,11 @@ router
 router
 .route('/data/appointmentlist')
 .get(getAppointmentList)
+
+router
+.route('/data/update')
+.patch(updateAppointment)
+
 
 
 

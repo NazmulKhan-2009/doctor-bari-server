@@ -32,7 +32,28 @@ const getAppointmentList = async(req,res)=>{
   } ;
 }
 
+
+const updateAppointment =async(req, res)=>{
+  try{
+    // console.log(typeof req.body.serial)
+      const {appointmentDate, serial, status}=req.body
+      const responsedData=await appointment
+          .findOneAndUpdate({appointmentDate},{status},{new:true})
+          .where('serial')
+          .equals(serial)
+          // .select('appointmentDate serial status -_id')
+    
+      const {appointmentDate: date, serial :sl, status : sts}=responsedData
+      res.status(200).send(`Appointment status updated as ${sts} for serial ${sl} on ${date}`)
+   }catch(e){
+      console.log(400).send('server Problem')
+    } ;
+
+}
+
+
 module.exports={
  appointmentSet,
- getAppointmentList
+ getAppointmentList,
+ updateAppointment
 }
