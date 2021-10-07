@@ -1,5 +1,5 @@
 const user=require('../../model/user')
-
+const admin=require('../../model/admin')
 const bcrypt=require('bcrypt')
 var jwt = require('jsonwebtoken');
 
@@ -29,22 +29,42 @@ switch (Object.keys(req.body).length>=3) {
   break;
 
   case false:
-    const responsedData=await user.findOne({phone:req.body.phone});
+    const responsedUserData=await user.findOne({phone:req.body.phone});
+    // const responsedAdminData=await admin.findOne({phone:req.body.phone});
 
-    if(responsedData){
+    const login=async(responsedData,entrant)=>{
+      if(responsedData){
       const {_id, name, email, photoURL}=responsedData;
       const hashedPass=responsedData.password;
       const reqPass=req.body.password ;
       const isPassMatch=await bcrypt.compare(reqPass, hashedPass);
       if(isPassMatch){
         const token= await jwt.sign({_id,email},'doctor2021care',{expiresIn:'1h'});
-        res.status(200).send({displayName:name, email, photoURL, token, signIn:true, notify:`Welcome ${name} You are signed in`})  ;  
+        res.status(200).send({displayName:name, email, photoURL, token, signIn:true, entrant, notify:`Welcome ${name} You are signed in`})  ;  
        }else{
          res.status(200).send({notify:'Your Password is mismatched'});
        }
     }else{
-      res.status(200).send({notify:'Your login information is mismatched'});
-    }  
+        res.status(200).send({notify:'Your login information is mismatched'});
+    }
+    }
+
+    if(responsedUserData){
+      login(responsedUserData,'user')
+    }else{
+      const responsedAdminData=await admin.findOne({phone:req.body.phone});
+      login(responsedAdminData, 'admin')
+    }
+
+    // if(responsedUserData){
+    //   login(responsedUserData)
+      
+    // }else if(responsedAdminData){
+    //   login(responsedAdminData)
+
+    // }else{
+    //   res.status(200).send({notify:'Your login information is mismatched'});
+    // }  
   break;
 
  default:

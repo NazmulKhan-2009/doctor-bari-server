@@ -11,6 +11,7 @@ const hospitalRoute=require('./src/router/hospitalData');
 const doctorRoute=require('./src/router/doctorRouter')
 const apointmentRoute =require('./src/router/appointmentRouter')
 const userRoute=require('./src/router/userRouter')
+const adminRoute=require('./src/router/adminRouter')
 
 connection()
 
@@ -23,6 +24,7 @@ app.use('/hospital',hospitalRoute);
 app.use('/doctor',doctorRoute);
 app.use('/appointment',apointmentRoute)
 app.use('/user',userRoute)
+app.use('/admin',adminRoute)
 
 
 

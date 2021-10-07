@@ -1,5 +1,6 @@
 
 const appointment=require('../../model/appointment')
+const user =require('../../model/user')
 
 
 // Create Doctor ↓
@@ -13,6 +14,12 @@ try{
  
  const serial=await appointment.count({appointmentDate:req.body.appointmentDate})+1
  const responsedData=await appointment.create({...req.body,serial,status:"Not Visited"})
+ await user.updateOne({phone:req.body.phone},{
+  $push:{
+     appointments:responsedData._id
+  }
+})
+
  res.status(200).send({data:responsedData,notify:"Your appointment has fixed"})
 }catch(e){
  res.status(400).send("failed to save Doctor Data Due to server problem")
