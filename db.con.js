@@ -3,7 +3,8 @@ require('dotenv').config()
 const mongoose=require('mongoose')
 
 //!from doctor bari api
-const db = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qnbwm.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+//const db = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.qnbwm.mongodb.net/${process.env.DB_NAME}?retryWrites=true&w=majority`;
+const db= `mongodb+srv://docNazmul:docNazmulkhan@cluster0.qnbwm.mongodb.net/doctorBari?retryWrites=true&w=majority`
 
 
 //! from hospital api
